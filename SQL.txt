@@ -1,0 +1,1318 @@
+--DDL CREATE,DROP,ALTER,TRUNCATE,COMMENT,RENAME
+--DQL SELECT
+--DML INSERT UPDATE DELETE 
+--DCL GRANT REVOKE
+--TCL COMMIT ROLLBACK SAVEPOINT
+ 
+SELECT * FROM EMP --ALL DATA
+
+SELECT * FROM EMP where EMP_SALARY > 3100000 --WHERE
+
+SELECT * FROM EMP ORDER BY EMP_SALARY DESC --ORDER BY DESC
+
+SELECT * FROM EMP ORDER BY EMP_SALARY ASC --ORDER BY ASC
+
+SELECT EMP_NAME , JOB FROM EMP ORDER BY EMP_SALARY --ORDER BY ASC
+
+SELECT EMP_NAME , JOB FROM EMP ORDER BY EMP_SALARY OFFSET 10 ROWS --OFFSET (REMOVES THE FIRST N NO OF ROWS)
+
+SELECT TOP 3(EMP_SALARY) FROM EMP -- SELECTS TOP 3 SALARY
+
+
+--FILTERING DATA
+SELECT DISTINCT JOB FROM EMP --DISTINCT MEANS UNIQUE
+
+SELECT EMP_NAME FROM EMP WHERE EMP_SALARY > 300000 --WHERE 
+
+SELECT EMP_NAME,EMP_SALARY,JOB FROM EMP WHERE EMP_SALARY > 300000 AND JOB = 'DEV' --AND 
+
+SELECT EMP_NAME,EMP_SALARY,JOB FROM EMP WHERE EMP_SALARY > 300000 OR JOB = 'DEV' --OR
+
+SELECT EMP_NAME,JOB FROM EMP WHERE NOT JOB = 'HR' --NOT
+
+SELECT EMP_NAME,JOB FROM EMP WHERE JOB IN ('HR','DEV')  --IN
+
+SELECT EMP_NAME,JOB FROM EMP WHERE JOB NOT IN ('HR','DEV')  --NOT IN
+
+SELECT EMP_SALARY FROM EMP WHERE EMP_SALARY BETWEEN 2000000 AND 4000000; --BETWEEN
+
+SELECT EMP_NAME FROM EMP WHERE EMP_NAME LIKE '_a%'; --like 
+
+SELECT EMP_NAME AS EMPLOYESS , JOB AS DEPARTMENT FROM EMP --ALIASES FOR COLUMNS
+
+SELECT * FROM EMP AS EMPLOYESS --ALIASES FOR TABLE
+
+DELETE FROM EMP WHERE EMP_ID = 4 --DELETEING RECORD
+
+UPDATE EMP SET JOB='DEVELOPER' WHERE JOB='DEV' --UPDATING RECORD
+
+UPDATE EMP SET JOB='DEV' WHERE JOB='DEVELOPER'
+
+
+--new table
+
+CREATE TABLE EMPLEAVES(
+	EMP_ID  INTEGER PRIMARY KEY,
+	LEAVES INTEGER
+);
+
+INSERT INTO EMPLEAVES VALUES
+(1,24),
+(2,12),
+(3,22),
+(4,12),
+(5,25),
+(6,13),
+(7,20),
+(8,12),
+(9,25),
+(10,17),
+(11,21);
+
+SELECT * FROM EMPLEAVES_NEW
+SELECT * FROM EMP
+
+DROP TABLE EMPLEAVES
+
+CREATE TABLE STUDENTS (
+    STUDENT_ID INT IDENTITY(1,1) PRIMARY KEY,  -- Auto-incrementing primary key
+    NAME VARCHAR(100),
+    AGE INT,
+    GENDER VARCHAR(10)
+);
+
+INSERT INTO STUDENTS (NAME, AGE, GENDER)
+VALUES
+('John Doe', 20, 'Male'),
+('Jane Smith', 22, 'Female'),
+('Sam Brown', 21, 'Male'),
+('Emily White', 23, 'Female');
+
+SELECT * FROM STUDENTS
+
+CREATE TABLE COURSES (
+    COURSE_ID INT IDENTITY(1,1) PRIMARY KEY,  -- Auto-incrementing primary key
+    STUDENT_ID INT,                           -- Foreign key to STUDENT_ID in the STUDENTS table
+    COURSE_NAME VARCHAR(100),
+    ENROLL_DATE DATE,
+    FOREIGN KEY (STUDENT_ID) REFERENCES STUDENTS(STUDENT_ID)
+);
+
+INSERT INTO COURSES (STUDENT_ID, COURSE_NAME, ENROLL_DATE)
+VALUES
+(1, 'Mathematics', '2024-01-15'),
+(2, 'Physics', '2024-02-10'),
+(3, 'Computer Science', '2024-03-01'),
+(4, 'Biology', '2024-01-10'),
+(1, 'Chemistry', '2024-04-01'),
+(3, 'Physics', '2024-05-15');
+
+INSERT INTO COURSES 
+VALUES(2, 'Information Technology', '2024-05-15');
+
+SELECT * FROM COURSES
+SELECT * FROM STUDENTS
+
+--Joins
+SELECT s.NAME, c.COURSE_NAME, c.ENROLL_DATE
+FROM STUDENTS s
+INNER JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID;  --INNER JOIN
+
+SELECT s.NAME, c.COURSE_NAME, c.ENROLL_DATE
+FROM STUDENTS s
+LEFT JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID;--LEFT JOIN
+
+SELECT s.NAME, c.COURSE_NAME, c.ENROLL_DATE
+FROM STUDENTS s
+RIGHT JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID;--RIGHT JOIN
+
+SELECT s.NAME, c.COURSE_NAME, c.ENROLL_DATE
+FROM STUDENTS s
+FULL OUTER JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID; --FULL OUTER
+ 
+SELECT s1.NAME AS STUDENT1, s2.NAME AS STUDENT2, c.COURSE_NAME --SELF
+FROM STUDENTS s1
+JOIN COURSES c ON s1.STUDENT_ID = c.STUDENT_ID
+JOIN STUDENTS s2 ON c.STUDENT_ID = s2.STUDENT_ID
+WHERE s1.STUDENT_ID = s2.STUDENT_ID ORDER BY s1.STUDENT_ID
+
+
+SELECT DISTINCT COURSE_NAME FROM COURSES WHERE COURSE_NAME IS NOT  NULL --WITHOUT NULL VALUES
+
+
+SELECT s.NAME, COUNT(c.COURSE_NAME) AS COURSE_COUNT   --GROUP BY
+FROM STUDENTS s LEFT JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID
+GROUP BY s.NAME;
+
+SELECT s.NAME, COUNT(c.COURSE_NAME) AS COURSE_COUNT   --HAVING
+FROM STUDENTS s LEFT JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID
+GROUP BY s.NAME HAVING COUNT(c.COURSE_NAME) >1;
+
+
+SELECT s.NAME,s.AGE, COUNT(c.COURSE_NAME) AS COURSE_COUNT   --GROUPING SET
+FROM STUDENTS s LEFT JOIN COURSES c ON s.STUDENT_ID = c.STUDENT_ID
+GROUP BY GROUPING SETS(
+(NAME),(AGE)
+)ORDER BY COURSE_COUNT 
+
+
+Here's a comprehensive guide with examples for the SQL commands and concepts listed. This is divided into sections for clarity.
+
+
+---
+
+Basic SQL Commands
+
+1. SQL SELECT
+Retrieves data from a table.
+
+SELECT name, age FROM employees;
+
+
+2. SQL DISTINCT
+Returns unique values from a column.
+
+SELECT DISTINCT department FROM employees;
+
+
+3. SQL WHERE
+Filters rows based on a condition.
+
+SELECT * FROM employees WHERE age > 30;
+
+
+4. SQL AND OR
+Combines multiple conditions.
+
+SELECT * FROM employees WHERE age > 30 AND department = 'IT';
+SELECT * FROM employees WHERE age > 30 OR department = 'HR';
+
+
+5. SQL IN
+Matches values in a list.
+
+SELECT * FROM employees WHERE department IN ('HR', 'IT');
+
+
+6. SQL BETWEEN
+Filters data within a range.
+
+SELECT * FROM employees WHERE age BETWEEN 25 AND 35;
+
+
+7. SQL Wildcard
+Matches patterns using % or _.
+
+SELECT * FROM employees WHERE name LIKE 'J%';
+
+
+8. SQL LIKE
+Used with wildcards for pattern matching.
+
+SELECT * FROM employees WHERE name LIKE '_a%';
+
+
+9. SQL ORDER BY
+Sorts data in ascending (ASC) or descending (DESC) order.
+
+SELECT * FROM employees ORDER BY age DESC;
+
+
+10. SQL GROUP BY
+Groups rows sharing a value.
+
+SELECT department, COUNT(*) FROM employees GROUP BY department;
+
+
+11. SQL HAVING
+Filters grouped data.
+
+SELECT department, COUNT(*) FROM employees GROUP BY department HAVING COUNT(*) > 5;
+
+
+12. SQL ALIAS / SQL AS
+Assigns temporary names to columns or tables.
+
+SELECT name AS employee_name FROM employees;
+
+
+13. SQL SELECT UNIQUE
+Equivalent to DISTINCT.
+
+SELECT UNIQUE department FROM employees;
+
+
+
+
+---
+
+Joins
+
+1. SQL JOIN
+Combines rows from two tables.
+
+SELECT e.name, d.department_name FROM employees e JOIN departments d ON e.department_id = d.id;
+
+
+2. SQL INNER JOIN
+Returns rows with matching values in both tables.
+
+SELECT e.name, d.department_name FROM employees e INNER JOIN departments d ON e.department_id = d.id;
+
+
+3. SQL OUTER JOIN
+Combines matching and non-matching rows.
+
+LEFT OUTER JOIN: Includes unmatched rows from the left table.
+
+SELECT e.name, d.department_name FROM employees e LEFT JOIN departments d ON e.department_id = d.id;
+
+CROSS JOIN: Produces a Cartesian product.
+
+SELECT * FROM employees CROSS JOIN departments;
+
+
+
+
+
+---
+
+Insert, Update, Delete
+
+1. SQL INSERT INTO
+Adds new rows.
+
+INSERT INTO employees (name, age, department_id) VALUES ('John Doe', 29, 3);
+
+
+2. SQL INSERT INTO SELECT
+Copies data between tables.
+
+INSERT INTO backup_employees SELECT * FROM employees;
+
+
+3. SQL UPDATE
+Modifies existing rows.
+
+UPDATE employees SET age = 30 WHERE name = 'John Doe';
+
+
+4. SQL DELETE FROM
+Removes rows.
+
+DELETE FROM employees WHERE age > 60;
+
+
+
+
+---
+
+Advanced SQL
+
+1. SQL UNION / UNION ALL
+Combines results from multiple queries.
+
+SELECT name FROM employees UNION SELECT name FROM contractors;
+SELECT name FROM employees UNION ALL SELECT name FROM contractors;
+
+
+2. SQL INTERSECT
+Retrieves common rows between queries.
+
+SELECT name FROM employees INTERSECT SELECT name FROM contractors;
+
+
+3. SQL MINUS
+Returns rows in the first query not in the second.
+
+SELECT name FROM employees MINUS SELECT name FROM contractors;
+
+
+4. SQL LIMIT / TOP
+Restricts the number of rows returned.
+
+SELECT * FROM employees LIMIT 5; -- MySQL
+SELECT TOP 5 * FROM employees;  -- SQL Server
+
+
+5. SQL Subquery
+Embeds one query within another.
+
+SELECT name FROM employees WHERE department_id = (SELECT id FROM departments WHERE name = 'IT');
+
+
+6. SQL WITH (Common Table Expressions)
+Creates a temporary result set.
+
+WITH dept_count AS (
+  SELECT department_id, COUNT(*) AS num_employees FROM employees GROUP BY department_id
+)
+SELECT * FROM dept_count WHERE num_employees > 10;
+
+
+
+---
+
+SQL Window Functions
+
+1. ROW_NUMBER()
+Assigns unique row numbers.
+
+SELECT name, ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY age) AS row_num FROM employees;
+
+
+2. RANK() and DENSE_RANK()
+Ranks rows with ties.
+
+SELECT name, RANK() OVER (ORDER BY age) AS rank FROM employees;
+
+
+3. LAG and LEAD
+Accesses preceding or following rows.
+
+SELECT name, LAG(age) OVER (ORDER BY age) AS previous_age FROM employees;
+
+
+
+
+1. Querying Data
+
+1.1 SELECT Clause
+
+The SELECT statement is used to retrieve data from a database table. You can choose specific columns or all columns using *.
+
+Syntax:
+
+SELECT column1, column2, ...
+FROM table_name;
+
+Example:
+
+SELECT EmployeeID, Name FROM Employees;
+
+
+---
+
+2. Sorting Data
+
+2.1 ORDER BY Clause
+
+Used to sort the result set by one or more columns in ascending (ASC) or descending (DESC) order.
+
+Syntax:
+
+SELECT column1, column2
+FROM table_name
+ORDER BY column1 [ASC|DESC];
+
+Example:
+
+SELECT Name, Salary 
+FROM Employees
+ORDER BY Salary DESC;
+
+
+---
+
+3. Limiting Rows
+
+3.1 OFFSET FETCH
+
+Limits rows returned after skipping a specific number of rows.
+
+Syntax:
+
+SELECT column1, column2
+FROM table_name
+ORDER BY column1
+OFFSET n ROWS FETCH NEXT m ROWS ONLY;
+
+Example:
+
+SELECT Name, Salary 
+FROM Employees
+ORDER BY Salary DESC
+OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY;
+
+3.2 SELECT TOP
+
+Limits the number of rows returned.
+
+Syntax:
+
+SELECT TOP n column1, column2
+FROM table_name;
+
+Example:
+
+SELECT TOP 3 Name, Salary FROM Employees ORDER BY Salary DESC;
+
+
+---
+
+4. Filtering Data
+
+4.1 DISTINCT
+
+Eliminates duplicate rows in the result set.
+
+Example:
+
+SELECT DISTINCT Department FROM Employees;
+
+4.2 WHERE
+
+Filters rows based on a condition.
+
+Example:
+
+SELECT Name, Salary 
+FROM Employees
+WHERE Salary > 50000;
+
+4.3 AND / 4.4 OR
+
+Combines multiple conditions.
+
+Example:
+
+SELECT Name, Salary 
+FROM Employees
+WHERE Salary > 50000 AND Department = 'HR';
+
+4.5 IN
+
+Filters rows where a column's value matches any value in a list.
+
+Example:
+
+SELECT Name 
+FROM Employees
+WHERE Department IN ('HR', 'IT', 'Finance');
+
+4.6 BETWEEN
+
+Filters rows within a range.
+
+Example:
+
+SELECT Name 
+FROM Employees
+WHERE Salary BETWEEN 40000 AND 80000;
+
+4.7 LIKE
+
+Filters rows based on patterns.
+
+Example:
+
+SELECT Name 
+FROM Employees
+WHERE Name LIKE 'A%'; -- Names starting with 'A'
+
+4.8 Column & Table Aliases
+
+Shortens column or table names in queries.
+
+Example:
+
+SELECT E.Name AS EmployeeName, E.Salary 
+FROM Employees AS E;
+
+
+---
+
+5. Joining Tables
+
+5.1 Joins
+
+Combines rows from two or more tables based on related columns.
+
+5.2 INNER JOIN
+
+Returns rows with matching values in both tables.
+
+Example:
+
+SELECT E.Name, D.DepartmentName 
+FROM Employees E
+INNER JOIN Departments D ON E.DepartmentID = D.DepartmentID;
+
+5.3 LEFT JOIN
+
+Returns all rows from the left table, even if there's no match in the right table.
+
+5.4 RIGHT JOIN
+
+Returns all rows from the right table, even if there's no match in the left table.
+
+5.5 FULL OUTER JOIN
+
+Returns rows when there's a match in either table.
+
+5.6 CROSS JOIN
+
+Returns a Cartesian product of two tables.
+
+5.7 Self Join
+
+Joins a table to itself.
+
+Example:
+
+SELECT A.Name, B.Name AS ManagerName
+FROM Employees A, Employees B
+WHERE A.ManagerID = B.EmployeeID;
+
+
+---
+
+6. Grouping Data
+
+6.1 GROUP BY
+
+Groups rows that share a value in a specific column.
+
+Example:
+
+SELECT Department, AVG(Salary) 
+FROM Employees
+GROUP BY Department;
+
+6.2 HAVING
+
+Filters grouped data.
+
+Example:
+
+SELECT Department, AVG(Salary) 
+FROM Employees
+GROUP BY Department
+HAVING AVG(Salary) > 50000;
+
+6.3 GROUPING SETS, 6.4 CUBE, 6.5 ROLLUP
+
+Advanced grouping for generating summary reports.
+
+
+7. Subqueries
+
+7.1 Subquery
+
+A query within another query.
+
+Example:
+
+SELECT Name 
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees);
+
+7.2 Correlated Subquery
+
+Depends on the outer query.
+
+7.3 EXISTS
+
+Checks if a subquery returns any rows.
+
+7.4 ANY / 7.5 ALL
+
+Compares values with a subquery.
+
+
+---
+
+8. Set Operators
+
+8.1 UNION
+
+Combines result sets of two queries, removing duplicates.
+
+Example:
+
+SELECT Name FROM Employees
+UNION
+SELECT Name FROM Contractors;
+
+8.2 INTERSECT
+
+Returns common rows.
+
+8.3 EXCEPT
+
+Returns rows in the first query but not in the second.
+
+
+---
+
+9. Common Table Expression (CTE)
+
+9.1 CTE
+
+Temporary result set used in a query.
+
+Example:
+
+WITH CTE AS (
+    SELECT Name, Salary FROM Employees WHERE Department = 'IT'
+)
+SELECT * FROM CTE;
+
+9.2 Recursive CTE
+
+Used for hierarchical data.
+
+
+---
+
+10. Pivot
+
+Transforms rows into columns.
+
+Example:
+
+SELECT *
+FROM (SELECT Department, Salary FROM Employees) AS SourceTable
+PIVOT (SUM(Salary) FOR Department IN ([HR], [IT], [Finance])) AS PivotTable;
+
+---
+
+11. Modifying Data
+
+11.1 INSERT
+
+Inserts a single row into a table.
+
+Syntax:
+
+INSERT INTO table_name (column1, column2, ...)
+VALUES (value1, value2, ...);
+
+Example:
+
+INSERT INTO Employees (Name, Department, Salary)
+VALUES ('John Doe', 'IT', 50000);
+
+11.2 INSERT Multiple Rows
+
+Allows inserting multiple rows in a single statement.
+
+Example:
+
+INSERT INTO Employees (Name, Department, Salary)
+VALUES 
+    ('Alice', 'HR', 40000),
+    ('Bob', 'Finance', 60000);
+
+11.3 INSERT INTO SELECT
+
+Inserts rows selected from another table.
+
+Example:
+
+INSERT INTO NewEmployees (Name, Department, Salary)
+SELECT Name, Department, Salary
+FROM Employees
+WHERE Department = 'IT';
+
+11.4 UPDATE
+
+Modifies existing rows in a table.
+
+Syntax:
+
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+
+Example:
+
+UPDATE Employees
+SET Salary = Salary + 5000
+WHERE Department = 'HR';
+
+11.5 UPDATE JOIN
+
+Updates rows based on a join with another table.
+
+Example:
+
+UPDATE E
+SET E.Salary = E.Salary + 5000
+FROM Employees E
+INNER JOIN Departments D ON E.DepartmentID = D.DepartmentID
+WHERE D.DepartmentName = 'Finance';
+
+11.6 DELETE
+
+Deletes rows from a table.
+
+Syntax:
+
+DELETE FROM table_name
+WHERE condition;
+
+Example:
+
+DELETE FROM Employees
+WHERE Department = 'HR';
+
+11.7 MERGE
+
+Combines INSERT, UPDATE, and DELETE operations into a single statement.
+
+Example:
+
+MERGE INTO TargetTable AS T
+USING SourceTable AS S
+ON T.ID = S.ID
+WHEN MATCHED THEN 
+    UPDATE SET T.Name = S.Name
+WHEN NOT MATCHED BY TARGET THEN
+    INSERT (ID, Name) VALUES (S.ID, S.Name)
+WHEN NOT MATCHED BY SOURCE THEN
+    DELETE;
+
+---
+
+12. Data Definition
+
+12.1 CREATE DATABASE
+
+Creates a new database.
+
+Syntax:
+
+CREATE DATABASE database_name;
+
+Example:
+
+CREATE DATABASE EmployeeDB;
+
+12.2 DROP DATABASE
+
+Deletes an existing database.
+
+Syntax:
+
+DROP DATABASE database_name;
+
+Example:
+
+DROP DATABASE EmployeeDB;
+
+12.3 CREATE SCHEMA
+
+Creates a schema for organizing database objects.
+
+Example:
+
+CREATE SCHEMA Finance;
+
+12.4 ALTER SCHEMA
+
+Moves objects between schemas.
+
+Example:
+
+ALTER SCHEMA HR TRANSFER Employees;
+
+12.5 DROP SCHEMA
+
+Deletes an empty schema.
+
+12.6 CREATE TABLE
+
+Creates a new table.
+
+Syntax:
+
+CREATE TABLE table_name (
+    column1 datatype constraints,
+    column2 datatype constraints,
+    ...
+);
+
+Example:
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    Name NVARCHAR(100),
+    Department NVARCHAR(50),
+    Salary DECIMAL(10, 2)
+);
+
+12.7 Identity Column
+
+Automatically generates unique values.
+
+Example:
+
+CREATE TABLE Employees (
+    EmployeeID INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100),
+    Salary DECIMAL(10, 2)
+);
+
+12.8 Sequence
+
+Generates unique numbers.
+
+Example:
+
+CREATE SEQUENCE EmployeeSeq
+START WITH 1 INCREMENT BY 1;
+
+SELECT NEXT VALUE FOR EmployeeSeq;
+
+12.9 ALTER TABLE ADD Column
+
+Adds a new column to a table.
+
+Example:
+
+ALTER TABLE Employees
+ADD DateOfJoining DATE;
+
+13. ALTER TABLE ALTER Column
+
+Modifies an existing column.
+
+Example:
+
+ALTER TABLE Employees
+ALTER COLUMN Name NVARCHAR(200);
+
+13.1 ALTER TABLE DROP Column
+
+Deletes a column from a table.
+
+Example:
+
+ALTER TABLE Employees
+DROP COLUMN DateOfJoining;
+
+13.2 Computed Columns
+
+Creates a column whose value is derived from other columns.
+
+Example:
+
+CREATE TABLE Sales (
+    ProductID INT,
+    Quantity INT,
+    UnitPrice DECIMAL(10,2),
+    TotalPrice AS (Quantity * UnitPrice)
+);
+
+13.3 DROP TABLE
+
+Deletes a table and its data.
+
+13.4 TRUNCATE TABLE
+
+Removes all rows but keeps the structure.
+
+13.5 SELECT INTO
+
+Creates a new table from a query result.
+
+Example:
+
+SELECT * INTO NewEmployees FROM Employees WHERE Department = 'IT';
+
+13.6 Rename a Table
+
+Renames a table.
+
+13.7 Temporary Tables
+
+Used for temporary data storage during a session.
+
+13.8 Synonym
+
+Creates an alias for another object.
+
+
+---
+
+14. SQL Server Data Types
+
+14.1 Common Data Types
+
+BIT: Boolean values (0 or 1).
+
+INT: Integer values.
+
+DECIMAL: Fixed-point numbers.
+
+CHAR/NCHAR: Fixed-length strings.
+
+VARCHAR/NVARCHAR: Variable-length strings.
+
+DATE: Date only.
+
+DATETIME2: Date and time.
+
+DATETIMEOFFSET: Date and time with time zone.
+
+
+
+---
+
+15. Constraints
+
+15.1 Primary Key
+
+Uniquely identifies each row.
+
+15.2 Foreign Key
+
+Links two tables.
+
+15.3 NOT NULL
+
+Ensures a column cannot have NULL values.
+
+15.4 UNIQUE
+
+Ensures all values in a column are unique.
+
+15.5 CHECK
+
+Enforces a condition on a column.
+
+
+---
+
+16. Expressions
+
+16.1 CASE
+
+Provides conditional logic.
+
+Example:
+
+SELECT Name, 
+    CASE 
+        WHEN Salary > 50000 THEN 'High'
+        ELSE 'Low'
+    END AS SalaryCategory
+FROM Employees;
+
+16.2 COALESCE
+
+Returns the first non-NULL value.
+
+
+Continuing with Expressions, Views, and other advanced topics:
+
+
+---
+
+16. Expressions (continued)
+
+16.3 NULLIF
+
+Returns NULL if two values are equal; otherwise, returns the first value.
+
+Syntax:
+
+NULLIF(expression1, expression2)
+
+Example:
+
+SELECT NULLIF(10, 10) AS Result; -- Returns NULL  
+SELECT NULLIF(10, 20) AS Result; -- Returns 10
+
+
+---
+
+17. Managing Views in SQL Server
+
+Views are virtual tables created from a query. They simplify complex queries and enhance security.
+
+17.1 Creating a New View
+
+Syntax:
+
+CREATE VIEW view_name AS  
+SELECT columns FROM table_name WHERE condition;
+
+Example:
+
+CREATE VIEW ActiveEmployees AS  
+SELECT Name, Department FROM Employees WHERE Status = 'Active';
+
+17.2 Renaming a View
+
+SQL Server doesn't support direct renaming of views. Use sp_rename.
+
+Example:
+
+EXEC sp_rename 'OldViewName', 'NewViewName';
+
+17.3 Listing Views
+
+Lists all views in a database.
+
+Query:
+
+SELECT * FROM INFORMATION_SCHEMA.VIEWS;
+
+17.4 Getting View Information
+
+Retrieve the definition of a view.
+
+Query:
+
+sp_helptext 'view_name';
+
+17.5 Removing a View
+
+Syntax:
+
+DROP VIEW view_name;
+
+17.6 Creating an Indexed View
+
+Indexed views improve performance by physically storing the query results.
+
+Syntax:
+
+CREATE UNIQUE CLUSTERED INDEX IndexName ON view_name (column1);
+
+
+---
+
+18. SQL Server Indexes
+
+Indexes improve query performance by reducing data retrieval time.
+
+18.1 Clustered Indexes
+
+Organizes table rows based on the index key. A table can have only one clustered index.
+
+Example:
+
+CREATE CLUSTERED INDEX idx_EmployeeID ON Employees(EmployeeID);
+
+18.2 Create Nonclustered Indexes
+
+Nonclustered indexes store a pointer to the data.
+
+Example:
+
+CREATE NONCLUSTERED INDEX idx_Name ON Employees(Name);
+
+18.3 Rename Indexes
+
+Syntax:
+
+EXEC sp_rename 'table_name.old_index_name', 'new_index_name', 'INDEX';
+
+18.4 Disable Indexes
+
+Temporarily disables an index.
+
+Syntax:
+
+ALTER INDEX index_name ON table_name DISABLE;
+
+18.5 Enable Indexes
+
+Rebuilds a disabled index.
+
+Syntax:
+
+ALTER INDEX index_name ON table_name REBUILD;
+
+18.6 Unique Indexes
+
+Ensures all index values are unique.
+
+Example:
+
+CREATE UNIQUE INDEX idx_UniqueName ON Employees(Name);
+
+18.7 Drop Indexes
+
+Deletes an index.
+
+Syntax:
+
+DROP INDEX index_name ON table_name;
+
+18.8 Indexes with Included Columns
+
+Includes non-key columns to improve performance for specific queries.
+
+Example:
+
+CREATE NONCLUSTERED INDEX idx_Included ON Employees(Department) INCLUDE (Salary, Name);
+
+18.9 Filtered Indexes
+
+Creates an index with a filter condition.
+
+Example:
+
+CREATE NONCLUSTERED INDEX idx_ActiveEmployees  
+ON Employees(Status)  
+WHERE Status = 'Active';
+
+19. Indexes on Computed Columns
+
+Allows indexing a column whose value is derived from an expression.
+
+Example:
+
+CREATE INDEX idx_TotalPrice ON Sales(TotalPrice);
+
+
+---
+
+19. SQL Server Aggregate Functions
+
+Aggregate functions perform calculations on groups of rows.
+
+19.1 AVG
+
+Calculates the average value of a column.
+
+SELECT AVG(Salary) AS AvgSalary FROM Employees;
+
+19.2 COUNT
+
+Counts rows or non-NULL values.
+
+SELECT COUNT(*) AS TotalEmployees FROM Employees;
+
+19.3 MIN and MAX
+
+Returns the minimum and maximum values in a column.
+
+SELECT MIN(Salary) AS MinSalary, MAX(Salary) AS MaxSalary FROM Employees;
+
+19.4 STDEV
+
+Calculates the standard deviation.
+
+SELECT STDEV(Salary) AS SalaryStdDev FROM Employees;
+
+19.5 SUM
+
+Calculates the total of a column.
+
+SELECT SUM(Salary) AS TotalSalary FROM Employees;
+
+
+---
+
+20. SQL Server Date Functions
+
+CURRENT_TIMESTAMP
+
+Returns the current date and time.
+
+SELECT CURRENT_TIMESTAMP;
+
+GETDATE
+
+Returns the current date and time in the server's timezone.
+
+SELECT GETDATE();
+
+SYSDATETIME
+
+Returns the current date and time with higher precision.
+
+SELECT SYSDATETIME();
+
+DATENAME
+
+Returns the name of a part of a date.
+
+SELECT DATENAME(MONTH, GETDATE()) AS CurrentMonth;
+
+DATEPART
+
+Returns the integer value of a part of a date.
+
+SELECT DATEPART(YEAR, GETDATE()) AS CurrentYear;
+
+DAY, MONTH, YEAR
+
+Extracts specific parts of a date.
+
+SELECT DAY(GETDATE()) AS Day, MONTH(GETDATE()) AS Month, YEAR(GETDATE()) AS Year;
+
+DATEDIFF
+
+Calculates the difference between two dates.
+
+SELECT DATEDIFF(DAY, '2025-01-01', GETDATE()) AS DaysElapsed;
+
+DATEADD
+
+Adds a time interval to a date.
+
+SELECT DATEADD(DAY, 10, GETDATE()) AS NewDate;
+
+EOMONTH
+
+Returns the last day of the month.
+
+SELECT EOMONTH(GETDATE()) AS EndOfMonth;
+
+DATEFROMPARTS
+
+Creates a date from individual parts.
+
+SELECT DATEFROMPARTS(2025, 1, 6) AS CustomDate;
+
+ISDATE
+
+Checks if a value is a valid date.
+
+SELECT ISDATE('2025-01-06') AS IsValidDate;
+
+
+---
+
+21. SQL Server String Functions
+
+ASCII, CHAR, NCHAR
+
+ASCII: Returns ASCII value of a character.
+
+CHAR: Returns a character for an ASCII value.
+
+NCHAR: Returns a Unicode character.
+
+
+SELECT ASCII('A') AS ASCIIValue, CHAR(65) AS CharValue, NCHAR(8364) AS UnicodeChar;
+
+CHARINDEX
+
+Finds the position of a substring.
+
+SELECT CHARINDEX('SQL', 'Learn SQL Server') AS Position;
+
+CONCAT, CONCAT_WS
+
+Concatenates strings.
+
+SELECT CONCAT('Hello', ' ', 'World') AS Greeting;  
+SELECT CONCAT_WS('-', '2025', '01', '06') AS FormattedDate;
+
+
+
+
+
+
+
+
+
+
+
